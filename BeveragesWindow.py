@@ -43,5 +43,4 @@ class BeveragesWindow(ProductCategoryWindow):
         print("in")
         print(temp_list)
         BeveragesWindow.list_bag.extend(temp_list)
-        # BagWindow.retrieve_bag()
         self.master.destroy()

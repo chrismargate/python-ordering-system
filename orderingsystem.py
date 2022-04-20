@@ -177,138 +177,14 @@ class OrderingSystem:
         self.foodtype_pie["text"] = "Most ordered food type by quantity pie chart"
         self.foodtype_pie.grid(row=1, column=0)
 
-        self.fooditem1_graph = tk.Button(self.displayingpanel)
-        self.fooditem1_graph["width"] = "55"
-        self.fooditem1_graph["command"] = self.fooditem1_graph_action
-        self.fooditem1_graph["text"] = "Food items with more than 10 total ordered quantity"
-        self.fooditem1_graph.grid(row=1, column=1)
-
-        self.fooditem2_graph = tk.Button(self.displayingpanel)
-        self.fooditem2_graph["width"] = "55"
-        self.fooditem2_graph["command"] = self.fooditem2_graph_action
-        self.fooditem2_graph["text"] = "Food items with total orders between 10 and 20"
-        self.fooditem2_graph.grid(row=2, column=0)
-
-        self.customercity_graph = tk.Button(self.displayingpanel)
-        self.customercity_graph["width"] = "55"
-        self.customercity_graph["command"] = self.customercity_graph_action
-        self.customercity_graph["text"] = "Number of customers between Pasig and Manila"
-        self.customercity_graph.grid(row=2, column=1)
-
-        self.data_button_7 = tk.Button(self.displayingpanel)
-        self.data_button_7["width"] = "55"
-        self.data_button_7["text"] = "Comparison  between orders from Pasig and Manila"
-        self.data_button_7.grid(row=3, column=0)
-        # self.data_button_7["command"] = self.customercity_graph_action
-
-        self.data_button_8 = tk.Button(self.displayingpanel)
-        self.data_button_8["width"] = "55"
-        self.data_button_8["text"] = "Number of accounts based in Metro Manila (NCR) by city"
-        self.data_button_8.grid(row=3, column=1)
-
-        self.data_button_9 = tk.Button(self.displayingpanel)
-        self.data_button_9["width"] = "55"
-        self.data_button_9[
-            "text"] = "Number of accounts based outside of Metro Manila (NCR) by city"
-        self.data_button_9.grid(row=4, column=0)
-
-        self.data_button_10 = tk.Button(self.displayingpanel)
-        self.data_button_10["width"] = "55"
-        self.data_button_10["text"] = "Number of orders made per account"
-        self.data_button_10.grid(row=4, column=1)
-
-    def customercity_graph_action(self):
-        connection = sql.connect(
-            host="localhost", user="root", passwd="NewPassword")
-        cur = connection.cursor()
-
-        string_query = f'SELECT COUNT(*),ekasborgers.useraccounts_t.address \
-FROM ekasborgers.useraccounts_t \
-WHERE address IN ("Pasig","Manila") \
-GROUP BY address \
-ORDER BY COUNT(*) DESC;'
-
-        intervals = []
-        food_items = []
-        cur.execute(string_query)
-
-        for record in cur:
-            intervals.append(record[0])
-            food_items.append(str(record[1]) + "\n" + record[2])
-
-        plt.bar(food_items, intervals)
-
-        plt.xlabel("Food Item")
-        plt.ylabel("Number of Orders")
-        plt.title("Most ordered food item")
-        plt.show()
-        pass
-
-    def fooditem2_graph_action(self):
-        connection = sql.connect(
-            host="localhost", user="root", passwd="NewPassword")
-        cur = connection.cursor()
-
-        string_query = f'SELECT SUM(quantity),ekasborgers.orders_t.food_id,ekasborgers.fooditems_t.food_name \
-FROM ekasborgers.orders_T \
-JOIN ekasborgers.fooditems_T \
-ON ekasborgers.orders_t.food_id = ekasborgers.fooditems_t.food_id \
-GROUP BY food_id \
-HAVING SUM(quantity) BETWEEN 10 AND 20 \
-ORDER BY SUM(quantity) DESC;'
-
-        intervals = []
-        food_items = []
-        cur.execute(string_query)
-
-        for record in cur:
-            intervals.append(record[0])
-            food_items.append(str(record[1]) + "\n" + record[2])
-
-        plt.bar(food_items, intervals)
-
-        plt.xlabel("Food Item")
-        plt.ylabel("Number of Orders")
-        plt.title("Most ordered food item")
-        plt.show()
-
-    def fooditem1_graph_action(self):
-        connection = sql.connect(
-            host="localhost", user="root", passwd="NewPassword")
-        cur = connection.cursor()
-
-        string_query = f'SELECT SUM(quantity),ekasborgers.orders_t.food_id,ekasborgers.fooditems_t.food_name \
-FROM ekasborgers.orders_T \
-JOIN ekasborgers.fooditems_T \
-ON ekasborgers.orders_t.food_id = ekasborgers.fooditems_t.food_id \
-GROUP BY food_id \
-HAVING SUM(quantity) >= 10 \
-ORDER BY SUM(quantity) DESC;'
-
-        intervals = []
-        food_items = []
-        cur.execute(string_query)
-
-        for record in cur:
-            intervals.append(record[0])
-            food_items.append(str(record[1]) + "\n" + record[2])
-
-        plt.bar(food_items, intervals)
-
-        plt.xlabel("Food Item")
-        plt.ylabel("Number of Orders")
-        plt.title("Most ordered food item")
-        plt.show()
-
     def payment_graph_action(self):
         connection = sql.connect(
             host="localhost", user="root", passwd="NewPassword")
         cur = connection.cursor()
 
-        string_query = f'SELECT COUNT(*),payment_method \
+        string_query = f'SELECT COUNT(payment_method),payment_method \
 FROM ekasborgers.orders_T \
-GROUP BY payment_method \
-ORDER BY COUNT(*) DESC;'
+GROUP BY payment_method;'
 
         intervals = []
         payment_method = []
@@ -336,8 +212,7 @@ ORDER BY COUNT(*) DESC;'
 FROM ekasborgers.orders_T \
 JOIN ekasborgers.fooditems_T \
 ON ekasborgers.orders_t.food_id = ekasborgers.fooditems_t.food_id \
-GROUP BY food_id \
-ORDER BY SUM(quantity);'
+GROUP BY food_id;'
 
         intervals = []
         food_items = []
@@ -496,7 +371,5 @@ if __name__ == '__main__':
     while OrderingSystem.on_loop == True:
         OrderingSystem.on_loop = False
         LoginWindow(tk.Tk()).run()
-        # LoginWindow.logged_in = True
         if LoginWindow.logged_in == True:
-            # OrderingSystem.on_loop = False
             OrderingSystem(tk.Tk()).run()

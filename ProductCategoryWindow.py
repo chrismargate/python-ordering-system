@@ -38,12 +38,9 @@ class ProductCategoryWindow:
 
         self.canvas.create_window((0,0),window=self.second_frame,anchor=tk.NW)
 
-        # self.generate_product_items()
-
         self.mainwindow = self.main_frame
 
     def generate_product_items(self):
-        # print(f"List_bag_instance before generate: {self.list_bag_instance}")
         self.master.title(self.folder_name)
         self.img_list = []
         self.list_imgs = os.listdir(os.getcwd() + f"\\assets\\{self.folder_name}")
@@ -64,7 +61,6 @@ class ProductCategoryWindow:
                 temp_string = img.replace(".png","").split("=")
                 img_path = f"{os.getcwd()}\\assets\\{self.folder_name}\\{img}"
                 food_obj = Food(self.food_id+counter,temp_string[0],int(temp_string[1]),image_path = img_path)
-                # food_obj.set_image(self.img_list[counter])
                 self.food_obj_references.append(food_obj)
                 del food_obj
                 counter += 1
@@ -122,7 +118,6 @@ class ProductCategoryWindow:
             self.addtobag_button.place(x=162.5,y=110)
 
             self.food_order_frame.grid(row=self.start_row,column=2)
-            # self.update_info(self.start_row-1)
 
             self.current_quantity_references.append(self.current_quantity_value)
             self.entry_references.append(self.quantity_var)
@@ -196,9 +191,6 @@ class ProductCategoryWindow:
                 self.list_bag_instance = temp_list
                 self.update_info(index)
                 self.reset_quantity_entry(index)
-
-                # for item in self.list_bag_instance:
-                #     print(item.get_number(),item.get_name(),item.get_quantity(),item.get_price())
                 return
             counter += 1
         food_obj.set_quantity(int(self.entry_references[index].get()))
@@ -207,9 +199,7 @@ class ProductCategoryWindow:
 
         self.update_info(index)
         self.reset_quantity_entry(index)
-
-        # print(f"List_bag_instance after add to bag: {self.list_bag_instance}")
-        
+      
     def reset_quantity_entry(self,index):
         self.entry_references[index].set("0")
         self.total_price_references[index]["text"] = "0"
@@ -219,7 +209,6 @@ class ProductCategoryWindow:
             if self.food_obj_references[index].get_number() == item.get_number():
                 self.current_quantity_references[index]["text"] = str(item.get_quantity())
     
-
     def update_info_init(self,index):
         pass
 
